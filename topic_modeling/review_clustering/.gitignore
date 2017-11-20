@@ -32,7 +32,7 @@ cmake-build-debug/
 *.iws
 
 target/
-
+project/
 *.sbt
 output
 
