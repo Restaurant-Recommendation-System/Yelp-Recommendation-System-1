@@ -15,6 +15,11 @@ class business(row: String) extends Serializable {
   }
   val business_id: String = columns(1)
   val name: String = columns(2)
-  val city: String = columns(3)
+  val city: String = try {
+    columns(3)
+  }
+  catch {
+    case e : Throwable => ""
+  }
 
 }

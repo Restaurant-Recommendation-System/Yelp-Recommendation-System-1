@@ -5,11 +5,9 @@ SPARK_HOME = /usr/local/Cellar/apache-spark/2.2.0
 
 #Data Subset
 #INPUT1 = input/doc_topic_sample.txt
-#INPUT1 = input/filtered_review.csv
 INPUT1 = input/filtered_review.csv
 INPUT2 = input/doc_topic.txt
-
-#INPUT3 = input/MillionSongSubset/similar_artists.csv
+INPUT3 = input/filtered_business.csv
 
 OUTPUT = output/
 
@@ -20,8 +18,9 @@ clean:
 	-mkdir $(TARGET)
 
 run: compile
-	$(SPARK_HOME)/bin/spark-submit --class org.neu.Clustering --master local --driver-memory 8g TopicClustering.jar $(INPUT1) $(INPUT2) $(OUTPUT)
-	#$(SPARK_HOME)/bin/spark-submit --class org.neu.TopicClustering --master local --driver-memory 8g TopicClustering.jar $(INPUT1) $(OUTPUT)
+	$(SPARK_HOME)/bin/spark-submit --class org.neu.Clustering --master local --driver-memory 8g TopicClustering.jar $(INPUT1) $(INPUT2) $(INPUT3) $(OUTPUT)
+	#$(SPARK_HOME)/bin/spark-submit --class org.neu.TopicClustering --master local --driver-memory 8g TopicClustering.jar $(INPUT3) $(OUTPUT)
+
 
 compile: clean
 	$(SCALA_HOME)/bin/scalac -classpath $(CLASSPATH) -d $(TARGET) src/main/scala/org/neu/*.scala

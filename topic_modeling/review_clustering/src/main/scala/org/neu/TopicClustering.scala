@@ -29,20 +29,10 @@ object TopicClustering {
       case (_, iter) => iter
     }.map(row => {
       val review = new reviews(row)
+
       (review.review_id,review.review)
     }).foreach(r => writeToFile(r._2,"output/review_files/"+r._1))
 
-
-
-//    val doc_topic = sc.textFile(args(0))
-//    val opPath = args(1)
-//
-//    val topic_cluster = doc_topic.map(row => {
-//      val top_topic = new docTopic(row)
-//      ((top_topic.review,top_topic.topic1),(top_topic.review,top_topic.topic2))
-//    }).flatMap{x => Set(x._1,x._2)}.persist
-//
-//    topic_cluster.foreach(println)
 
     println("Done!")
 

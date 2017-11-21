@@ -1,6 +1,7 @@
 package org.neu
 
 import java.io.Serializable
+import scala.io.Source
 
 class reviews(row: String) extends Serializable {
 
@@ -17,6 +18,12 @@ class reviews(row: String) extends Serializable {
   val review_id: String = columns(1)
   val user_id: String = columns(2)
   val business_id: String = columns(3)
-  val review:String = columns(4).replaceAll("\"","")
+
+  val stopWords = Array(Source.fromFile("src/main/resources/stopWords.txt").mkString.split("\n"))
+
+  val reviewWords: Array[String] = columns(4).toLowerCase.split(' ')
+
+  val review: String = reviewWords.filter(s => !(stopWords.contains(s))).mkString(" ")
+
 
 }
