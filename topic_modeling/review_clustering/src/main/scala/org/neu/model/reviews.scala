@@ -1,13 +1,19 @@
-package org.neu
+package org.neu.model
 
 import java.io.Serializable
+
 import scala.io.Source
 
+/**
+  * @author Rashmi Dwaraka
+  */
 class reviews(row: String) extends Serializable {
 
   val columns = row.split(",") //All the columns from the row passed in the constructor
 
-  //Attributes of the song required to perform the queries
+  /**
+    * Attributes of the reviews required to perform the queries
+    */
   val stars: Float = try {
     columns(0).toFloat
   }
