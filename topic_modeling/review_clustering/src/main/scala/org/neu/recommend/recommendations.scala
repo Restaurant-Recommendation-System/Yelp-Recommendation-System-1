@@ -4,6 +4,7 @@ import java.io.{BufferedWriter, File, FileWriter, Serializable}
 
 import org.apache.spark.{SparkConf, SparkContext}
 import org.neu.model.business
+import scala.io.StdIn.{readInt,readBoolean}
 
 /**
   * @author Rashmi Dwaraka
@@ -159,8 +160,13 @@ object recommendations {
     // read input file paths and output path
     val catBusinessRat = sc.textFile(args(0))
     val foodTypeBusinessRat = sc.textFile(args(1))
-    val business = sc.textFile(args(2))
-    val opPath = args(3)
+
+    print("How many beer? ")
+    val n = readInt()
+    printf("You ordered %d beer\n", n)
+    print("Are you sure? ")
+    if (readBoolean())
+      printf("Serving %d beer\n", n)
 
 
     println("Done!")
