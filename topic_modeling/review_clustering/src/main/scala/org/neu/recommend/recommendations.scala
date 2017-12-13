@@ -4,7 +4,6 @@ import java.io.{BufferedWriter, File, FileWriter, Serializable}
 
 import org.apache.spark.{SparkConf, SparkContext}
 import org.neu.model.business
-import scala.io.StdIn.{readInt,readBoolean}
 
 /**
   * @author Rashmi Dwaraka
@@ -92,20 +91,23 @@ object recommendations {
     * @param output
     * @param outputPath
     */
-  def writeToFile(output: Array[String], outputPath: String): Unit = {
+  def writeToFile(output: Array[String], outputPath: String,header: String): Unit = {
     val file = new File(outputPath)
     val bw = new BufferedWriter(new FileWriter(file))
-    bw.write(s"business_id,overall_stars,city,name,foodType,stars\n")
+    bw.write(header)
     output.foreach(o => bw.write(o))
     bw.close()
   }
 
   /**
-    * Get the Business details by joining with category and food type rating
+    * main function to initiate and process recommendations for restaurants
+    * @param args
     */
-  def getbusinessDetails: Unit = {
+  def main(args: Array[String]): Unit = {
 
-    val sc = new SparkContext(new SparkConf().setAppName("Build Recommendation Business Model"))
+    // create Spark context with Spark configuration
+    // val sc = new SparkContext(new SparkConf().setAppName("Spark Count").setMaster("local"))
+    val sc = new SparkContext(new SparkConf().setAppName("Recommendation Model"))
     sc.setLogLevel("ERROR")
 
     // read input file paths and output path
@@ -136,38 +138,16 @@ object recommendations {
         s"$bid,$name,$stars,$city,$ambience,$service,$price,$delivery,$taste,$food\n"
       }.collect
 
-    writeToFile(categoryRatBusiness, opPath + "category_business_rating.csv")
+    writeToFile(categoryRatBusiness, opPath + "category_business_rating.csv",
+      "business_id,name,overall_stars,city,ambience,service,price,delivery,taste,food\n")
 
     val foodTypeRatBusiness = foodTypeRat.join(businessRDD).
       map { case (bid, ((foodType, stars), (name, overall_stars, city))) =>
         s"$bid,$overall_stars,$city,$name,$foodType,$stars\n"
       }.collect
 
-    writeToFile(foodTypeRatBusiness, opPath + "foodType_business_rating.csv")
-  }
-
-  /**
-    * main function to initiate and process recommendations for restaurants
-    * @param args
-    */
-  def main(args: Array[String]): Unit = {
-
-    // create Spark context with Spark configuration
-    // val sc = new SparkContext(new SparkConf().setAppName("Spark Count").setMaster("local"))
-    val sc = new SparkContext(new SparkConf().setAppName("Recommendation Model"))
-    sc.setLogLevel("ERROR")
-
-    // read input file paths and output path
-    val catBusinessRat = sc.textFile(args(0))
-    val foodTypeBusinessRat = sc.textFile(args(1))
-
-    print("How many beer? ")
-    val n = readInt()
-    printf("You ordered %d beer\n", n)
-    print("Are you sure? ")
-    if (readBoolean())
-      printf("Serving %d beer\n", n)
-
+    writeToFile(foodTypeRatBusiness, opPath + "foodType_business_rating.csv",
+      "business_id,overall_stars,city,name,foodType,stars\n")
 
     println("Done!")
 
